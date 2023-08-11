@@ -30,10 +30,10 @@ public class PendingTask<ResultType> {
 
     public func current(_ closure: () -> DefferedTask) -> DefferedTask {
         return mutex.sync {
-            let info = Info(original: cached ?? closure())
-            return .init(execute: { [weak self, info] actual in
+            let loacalCached: DefferedTask = cached ?? closure()
+            return .init(execute: { [weak self, loacalCached] actual in
                 guard let self else {
-                    info.original?.onComplete(actual)
+                    loacalCached.onComplete(actual)
                     return
                 }
 
@@ -42,12 +42,16 @@ public class PendingTask<ResultType> {
                         cached.afterComplete { result in
                             actual(result)
                         }
-                    } else if let original = info.original {
-                        original.beforeComplete { [weak self] result in
-                            self?.cached = nil
+                    } else {
+                        loacalCached.beforeComplete { [weak self] result in
+                            self?.mutex.sync {
+                                self?.cached = nil
+                            }
+
                             self?.beforeCallback?(result)
                         }
                         .afterComplete { [weak self] result in
+                            self?.cached = nil
                             self?.afterCallback?(result)
                         }
                         .assign(to: &self.cached)
@@ -55,8 +59,6 @@ public class PendingTask<ResultType> {
                         .onComplete { result in
                             actual(result)
                         }
-                    } else {
-                        assertionFailure("unexpected behavior")
                     }
                 }
             })
@@ -85,17 +87,5 @@ public class PendingTask<ResultType> {
             }
         }
         return self
-    }
-}
-
-private final class Info<R> {
-    private(set) weak var original: DefferedTask<R>?
-
-    init(original: DefferedTask<R>) {
-        self.original = original
-    }
-
-    func stop() {
-        original = nil
     }
 }
