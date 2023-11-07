@@ -111,9 +111,25 @@ public extension DefferedTask {
                 completed = false
             }
 
-            onComplete {
-                let new = mapper($0)
-                actual(new)
+            onComplete { [weak self] result in
+                guard let self else {
+                    return
+                }
+
+                workQueue.fire { [weak self] in
+                    guard let self else {
+                        return
+                    }
+
+                    let new = mapper(result)
+                    completionQueue.fire { [weak self] in
+                        guard let _ = self else {
+                            return
+                        }
+
+                        actual(new)
+                    }
+                }
             }
         })
 
