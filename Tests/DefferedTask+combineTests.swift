@@ -52,7 +52,7 @@ final class DefferedTask_combineTests: XCTestCase {
         XCTAssertEqual(actual, [])
     }
 
-    func test_zip2() {
+    func test_combineSuccess() {
         var actual: (lhs: Int, rhs: String)!
         DefferedResult<Int, TestError>.success(1)
             .combineSuccess(with: .success("2"))
@@ -61,5 +61,16 @@ final class DefferedTask_combineTests: XCTestCase {
                 actual = result
             }
         XCTAssertEqualAny(actual, (1, "2"))
+    }
+
+    func test_combineError() {
+        var actual: (lhs: Int, rhs: String)!
+        DefferedResult<Int, TestError>.success(1)
+            .combineSuccess(with: .failure(.anyError1))
+            .recover(with: (2, "3"))
+            .onComplete { result in
+                actual = result
+            }
+        XCTAssertEqualAny(actual, (2, "3"))
     }
 }

@@ -42,7 +42,10 @@ public final class DefferedTask<ResultType> {
             return callbacks
         }
 
-        completionQueue.fire {
+        completionQueue.fire { [weak self] in
+            guard let _ = self else {
+                return
+            }
             callbacks.before?(result)
             callbacks.complete?(result)
             callbacks.deferred?(result)
@@ -64,8 +67,14 @@ public final class DefferedTask<ResultType> {
             completed = true
         }
 
-        workQueue.fire {
-            self.work { [unowned self] in
+        workQueue.fire { [weak self] in
+            guard let self else {
+                return
+            }
+            work { [weak self] in
+                guard let self else {
+                    return
+                }
                 complete($0)
             }
         }
@@ -97,6 +106,18 @@ public extension DefferedTask {
     }
 
     // MARK: - map
+
+    func map(_ mapper: @escaping (ResultType) -> ResultType) -> DefferedTask<ResultType> {
+        return flatMap { result in
+            return mapper(result)
+        }
+    }
+
+    func compactMap<NewResultType>(_ mapper: @escaping (ResultType?) -> NewResultType) -> DefferedTask<NewResultType> {
+        return flatMap { result in
+            return mapper(result)
+        }
+    }
 
     func flatMap<NewResultType>(_ mapper: @escaping (ResultType) -> NewResultType) -> DefferedTask<NewResultType> {
         assert(!completed, "you can't change configuration after `onComplete`")
