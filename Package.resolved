@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/NikSativa/NQueue.git",
       "state" : {
-        "revision" : "e700e3cd56138804335ae5d009a5cd01c2137f11",
-        "version" : "1.2.2"
+        "revision" : "5d8f6832bab8b662f4226fbc21cbd8dac97dccfb",
+        "version" : "1.2.3"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/NikSativa/NSpry.git",
       "state" : {
-        "revision" : "cee2487470f8d660f8cb961f5c6de04ac3ddec3d",
-        "version" : "2.1.0"
+        "revision" : "5d77fc191e140013a61476cbee66c031def9757f",
+        "version" : "2.1.2"
       }
     }
   ],

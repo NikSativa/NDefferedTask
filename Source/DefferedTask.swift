@@ -37,15 +37,16 @@ public final class DefferedTask<ResultType> {
             self.beforeCallback = nil
             self.completeCallback = nil
             self.afterComplete = nil
-            self.strongyfy = nil
 
             return callbacks
         }
 
         completionQueue.fire { [weak self] in
-            guard let _ = self else {
+            guard let self else {
                 return
             }
+            strongyfy = nil
+
             callbacks.before?(result)
             callbacks.complete?(result)
             callbacks.deferred?(result)

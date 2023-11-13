@@ -12,8 +12,8 @@ let package = Package(
         .library(name: "NDefferedTask", targets: ["NDefferedTask"])
     ],
     dependencies: [
-        .package(url: "https://github.com/NikSativa/NQueue.git", .upToNextMinor(from: "1.2.2")),
-        .package(url: "https://github.com/NikSativa/NSpry.git", .upToNextMinor(from: "2.1.0"))
+        .package(url: "https://github.com/NikSativa/NQueue.git", .upToNextMinor(from: "1.2.3")),
+        .package(url: "https://github.com/NikSativa/NSpry.git", .upToNextMinor(from: "2.1.2"))
     ],
     targets: [
         .target(name: "NDefferedTask",
