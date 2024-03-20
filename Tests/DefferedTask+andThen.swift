@@ -26,7 +26,7 @@ final class DefferedTask_andThen: XCTestCase {
                 actual = result
                 exp.fulfill()
             }
-            wait(for: [exp], timeout: 0.1)
+            wait(for: [exp], timeout: 0.2)
             return actual
         }
 

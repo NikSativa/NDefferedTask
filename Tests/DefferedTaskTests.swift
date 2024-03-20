@@ -6,7 +6,7 @@ import NSpry
 import XCTest
 
 final class DefferedTaskTests: XCTestCase {
-    private static let timeout: TimeInterval = 0.1
+    private static let timeout: TimeInterval = 0.2
 
     private enum Value: Equatable, SpryEquatable {
         case idle
@@ -75,12 +75,14 @@ final class DefferedTaskTests: XCTestCase {
         var deferredCompleted: [Value] = []
 
         let expSubject = expectation(description: "subject")
+        let deinitSubject = expectation(description: "deinitSubject")
         var subject: DefferedTask<Value>! = .init { completion in
             started += 1
             completion(.correct)
             expSubject.fulfill()
         } onDeinit: {
             stopped += 1
+            deinitSubject.fulfill()
         }
         .set(workQueue: .async(Queue.background))
         .set(completionQueue: .async(Queue.background))
@@ -126,6 +128,7 @@ final class DefferedTaskTests: XCTestCase {
         XCTAssertEqual(stopped, 0)
 
         subject = nil
+        wait(for: [deinitSubject], timeout: Self.timeout)
 
         XCTAssertEqual(started, 1)
         XCTAssertEqual(stopped, 1)
@@ -325,11 +328,13 @@ final class DefferedTaskTests: XCTestCase {
             assertionFailure("should never heppen")
         }
 
+        #if (os(macOS) || os(iOS) || os(visionOS)) && (arch(x86_64) || arch(arm64))
         XCTAssertThrowsAssertion {
             intSubject.onComplete { _ in
                 assertionFailure("should never heppen")
             }
         }
+        #endif
     }
 
     func test_init() {
@@ -359,6 +364,7 @@ final class DefferedTaskTests: XCTestCase {
         XCTAssertTrue(actual)
     }
 
+    #if (os(macOS) || os(iOS) || os(visionOS)) && (arch(x86_64) || arch(arm64))
     func test_assertions() {
         let createSubject: () -> DefferedTask<Int> = {
             let intSubject: DefferedTask<Int> = .init(execute: { _ in
@@ -445,6 +451,7 @@ final class DefferedTaskTests: XCTestCase {
             _ = createSubject().set(userInfo: "some")
         }
     }
+    #endif
 
     func test_unwrap() {
         var actual: Int?

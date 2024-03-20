@@ -93,7 +93,7 @@ public extension DefferedTask {
             do {
                 switch $0 {
                 case .success(let response):
-                    return .success(try mapper(response))
+                    return try .success(mapper(response))
                 case .failure(let error):
                     return .failure(error)
                 }
