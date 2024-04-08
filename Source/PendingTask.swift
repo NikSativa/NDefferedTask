@@ -12,6 +12,7 @@ public class PendingTask<ResultType> {
     private var cached: DefferedTask?
 
     private var beforeCallback: Completion?
+    private var cachedCallback: Completion?
     private var afterCallback: Completion?
 
     public var isPending: Bool {
@@ -38,16 +39,14 @@ public class PendingTask<ResultType> {
                 }
 
                 mutex.sync {
-                    if let cached = self.cached {
-                        cached.afterComplete { result in
+                    if let _ = self.cached {
+                        let originalCallback = self.cachedCallback
+                        self.cachedCallback = { result in
+                            originalCallback?(result)
                             actual(result)
                         }
                     } else {
                         loacalCached.beforeComplete { [weak self] result in
-                            self?.mutex.sync {
-                                self?.cached = nil
-                            }
-
                             self?.beforeCallback?(result)
                         }
                         .afterComplete { [weak self] result in
@@ -55,13 +54,36 @@ public class PendingTask<ResultType> {
                         }
                         .assign(to: &self.cached)
                         .weakify()
-                        .onComplete { result in
+                        .onComplete { [weak self] result in
+                            self?.mutex.sync {
+                                self?.cached = nil
+                            }
+
+                            let cachedCallback = self?.mutex.sync {
+                                let originalCallback = self?.cachedCallback
+                                self?.cachedCallback = nil
+                                return originalCallback
+                            }
+                            cachedCallback?(result)
                             actual(result)
                         }
                     }
                 }
             })
         }
+    }
+
+    public func restart(_ closure: @escaping ServiceClosure) -> DefferedTask {
+        return restart(with: .init(execute: closure))
+    }
+
+    public func restart(with closure: @autoclosure () -> DefferedTask) -> DefferedTask {
+        return restart(closure)
+    }
+
+    public func restart(_ closure: () -> DefferedTask) -> DefferedTask {
+        cached = nil
+        return current(closure)
     }
 
     @discardableResult
