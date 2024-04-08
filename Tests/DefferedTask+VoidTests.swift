@@ -1,7 +1,7 @@
+import DefferedTaskKit
 import Dispatch
 import Foundation
-import NDefferedTask
-import NSpry
+import SpryKit
 import XCTest
 
 final class DefferedTask_VoidTests: XCTestCase {

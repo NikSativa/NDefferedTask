@@ -1,5 +1,5 @@
 import Foundation
-import NQueue
+import Threading
 
 public typealias DefferedResult<T, E: Error> = DefferedTask<Result<T, E>>
 

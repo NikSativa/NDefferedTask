@@ -1,8 +1,8 @@
+import DefferedTaskKit
 import Dispatch
 import Foundation
-import NDefferedTask
-import NQueue
-import NSpry
+import SpryKit
+import Threading
 import XCTest
 
 final class DefferedTaskTests: XCTestCase {

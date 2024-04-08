@@ -1,10 +1,10 @@
 import Foundation
-import NQueue
+import Threading
 
 public typealias PendingResult<Response, Error: Swift.Error> = PendingTask<Result<Response, Error>>
 
 public class PendingTask<ResultType> {
-    public typealias DefferedTask = NDefferedTask.DefferedTask<ResultType>
+    public typealias DefferedTask = DefferedTaskKit.DefferedTask<ResultType>
     public typealias ServiceClosure = DefferedTask.TaskClosure
     public typealias Completion = DefferedTask.Completion
 

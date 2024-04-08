@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "NDefferedTask",
+    name: "DefferedTaskKit",
     platforms: [
         .iOS(.v13),
         .macOS(.v11),
@@ -13,26 +13,26 @@ let package = Package(
         .watchOS(.v6)
     ],
     products: [
-        .library(name: "NDefferedTask", targets: ["NDefferedTask"])
+        .library(name: "DefferedTaskKit", targets: ["DefferedTaskKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/NikSativa/NQueue.git", .upToNextMinor(from: "1.2.4")),
-        .package(url: "https://github.com/NikSativa/NSpry.git", .upToNextMinor(from: "2.1.4"))
+        .package(url: "https://github.com/NikSativa/Threading.git", .upToNextMinor(from: "1.3.0")),
+        .package(url: "https://github.com/NikSativa/SpryKit.git", .upToNextMinor(from: "2.2.0"))
     ],
     targets: [
-        .target(name: "NDefferedTask",
+        .target(name: "DefferedTaskKit",
                 dependencies: [
-                    "NQueue"
+                    "Threading"
                 ],
                 path: "Source",
                 resources: [
                     .copy("../PrivacyInfo.xcprivacy")
                 ]),
-        .testTarget(name: "NDefferedTaskTests",
+        .testTarget(name: "DefferedTaskKitTests",
                     dependencies: [
-                        "NDefferedTask",
-                        "NQueue",
-                        "NSpry"
+                        "DefferedTaskKit",
+                        "Threading",
+                        "SpryKit"
                     ],
                     path: "Tests")
     ]

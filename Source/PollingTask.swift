@@ -1,5 +1,5 @@
 import Foundation
-import NQueue
+import Threading
 
 private let defaultScheduleQueue: Queueable = Queue.custom(label: "PollingTask",
                                                            qos: .utility,

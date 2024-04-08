@@ -1,5 +1,5 @@
 import Foundation
-import NSpry
+import SpryKit
 
 extension Result {
     var error: Failure? {
