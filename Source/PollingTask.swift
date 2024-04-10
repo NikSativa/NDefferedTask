@@ -20,7 +20,7 @@ public final class PollingTask<ResultType> {
     private let minimumWaitingTime: TimeInterval?
     private let retryCount: Int
 
-    public required init(scheduleQueue: Queueable?,
+    public required init(scheduleQueue: Queueable? = nil,
                          idleTimeInterval: TimeInterval,
                          retryCount: Int,
                          minimumWaitingTime: TimeInterval? = nil,
@@ -101,7 +101,7 @@ public final class PollingTask<ResultType> {
 }
 
 public extension PollingTask {
-    convenience init(scheduleQueue: Queueable?,
+    convenience init(scheduleQueue: Queueable? = nil,
                      idleTimeInterval: TimeInterval,
                      retryCount: Int,
                      minimumWaitingTime: TimeInterval? = nil,

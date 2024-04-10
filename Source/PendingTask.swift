@@ -64,8 +64,8 @@ public class PendingTask<ResultType> {
                                 self?.cachedCallback = nil
                                 return originalCallback
                             }
-                            cachedCallback?(result)
                             actual(result)
+                            cachedCallback?(result)
                         }
                     }
                 }
