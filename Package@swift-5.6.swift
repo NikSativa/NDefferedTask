@@ -15,8 +15,8 @@ let package = Package(
         .library(name: "DefferedTaskKit", targets: ["DefferedTaskKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/NikSativa/Threading.git", .upToNextMinor(from: "1.3.4")),
-        .package(url: "https://github.com/NikSativa/SpryKit.git", .upToNextMajor(from: "2.2.2"))
+        .package(url: "https://github.com/NikSativa/Threading.git", .upToNextMinor(from: "1.3.5")),
+        .package(url: "https://github.com/NikSativa/SpryKit.git", .upToNextMajor(from: "2.2.3"))
     ],
     targets: [
         .target(name: "DefferedTaskKit",
